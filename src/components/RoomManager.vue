@@ -1,77 +1,45 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoom } from '../composables/useRoom'
 
 const newRoomName = ref('')
-const isCreating = ref(false)
-const error = ref('')
-
+const createParticipantName = ref('')
 const joinRoomName = ref('')
-const participantName = ref('')
-const isJoining = ref(false)
+const joinParticipantName = ref('')
 
-const backendUrl = (import.meta.env.VITE_BACKEND_URL as string) || 'http://localhost:8000'
+const { isCreating, isJoining, error, createRoom, joinRoom } = useRoom()
 
-// Emit events to parent component
 const emit = defineEmits<{
-  roomCreated: [roomName: string]
+  roomCreated: [roomName: string, participantName: string]
   roomJoined: [roomName: string, participantName: string]
 }>()
 
-const createRoom = async () => {
-  if (!newRoomName.value.trim()) return
-
-  isCreating.value = true
-  error.value = ''
+const createRoomHandler = async () => {
+  if (!newRoomName.value.trim() || !createParticipantName.value.trim()) return
 
   try {
-    const response = await fetch(`${backendUrl}/api/create-room?room_name=${encodeURIComponent(newRoomName.value.trim())}`, {
-      method: 'POST'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to create room: ${response.status}`)
-    }
-
-    emit('roomCreated', newRoomName.value.trim())
+    await createRoom(newRoomName.value.trim())
+    emit('roomCreated', newRoomName.value.trim(), createParticipantName.value.trim())
     newRoomName.value = ''
-  } catch (err: any) {
-    error.value = err.message || 'Failed to create room'
-  } finally {
-    isCreating.value = false
+    createParticipantName.value = ''
+  } catch (err) {
+    // Error handled in composable
   }
 }
 
-const joinRoom = async () => {
-    if (!joinRoomName.value.trim() || !participantName.value.trim()) return
+const joinRoomHandler = async () => {
+  if (!joinRoomName.value.trim() || !joinParticipantName.value.trim()) return
 
-    isJoining.value = true
-    error.value = ''
-
-    try{
-        //Check if room exists
-        const response = await fetch(`${backendUrl}/api/check-room?room_name=${encodeURIComponent(joinRoomName.value.trim())}`)
-        
-        if(!response.ok){
-          throw new Error(`Failed to verify room existence: ${response.status}`)
-        }
-
-        const data = await response.json()
-        if(!data.exists){
-          throw new Error('Room does not exist')
-        }
-
-        // Emit event to parent component
-        emit('roomJoined', joinRoomName.value.trim(), participantName.value.trim())
-        joinRoomName.value = ''
-        participantName.value = ''
-    } catch (err: any) {
-        error.value = err.message || 'Failed to join room'
-    } finally {
-        isJoining.value = false
-    }
+  try {
+    await joinRoom(joinRoomName.value.trim(), joinParticipantName.value.trim())
+    emit('roomJoined', joinRoomName.value.trim(), joinParticipantName.value.trim())
+    joinRoomName.value = ''
+    joinParticipantName.value = ''
+  } catch (err) {
+    // Error handled in composable
+  }
 }
 </script>
-
 
 <template>
   <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -81,33 +49,32 @@ const joinRoom = async () => {
       </h1>
 
       <!-- Join Existing Room Section -->
-        <div class="mb-8">
+      <div class="mb-8">
         <h2 class="text-lg font-semibold text-gray-700 mb-4">Join Existing Room</h2>
         <div class="space-y-4">
-            <input
+          <input
             v-model="joinRoomName"
             type="text"
             placeholder="Enter room name"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            @keyup.enter="joinRoom"
-            />
-            <input
-            v-model="participantName"
+            @keyup.enter="joinRoomHandler"
+          />
+          <input
+            v-model="joinParticipantName"
             type="text"
             placeholder="Enter your name"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            @keyup.enter="joinRoom"
-            />
-            <button
-            @click="joinRoom"
-            :disabled="!joinRoomName.trim() || !participantName.trim() || isJoining"
+            @keyup.enter="joinRoomHandler"
+          />
+          <button
+            @click="joinRoomHandler"
+            :disabled="!joinRoomName.trim() || !joinParticipantName.trim() || isJoining"
             class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+          >
             {{ isJoining ? 'Joining...' : 'Join Room' }}
-            </button>
+          </button>
         </div>
-        </div>
-
+      </div>
 
       <!-- Create Room Section -->
       <div class="mb-8">
@@ -118,11 +85,18 @@ const joinRoom = async () => {
             type="text"
             placeholder="Enter room name"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            @keyup.enter="createRoom"
+            @keyup.enter="createRoomHandler"
+          />
+          <input
+            v-model="createParticipantName"
+            type="text"
+            placeholder="Enter your name"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            @keyup.enter="createRoomHandler"
           />
           <button
-            @click="createRoom"
-            :disabled="!newRoomName.trim() || isCreating"
+            @click="createRoomHandler"
+            :disabled="!newRoomName.trim() || !createParticipantName.trim() || isCreating"
             class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isCreating ? 'Creating...' : 'Create Room' }}
@@ -137,4 +111,3 @@ const joinRoom = async () => {
     </div>
   </div>
 </template>
-
