@@ -23,6 +23,7 @@ defineProps<{
     >
       <p class="text-sm">{{ message.text }}</p>
       <p class="text-xs opacity-70 mt-1">{{ message.timestamp }}</p>
+      
     </div>
   </div>
 </template>

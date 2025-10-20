@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { Room, RoomEvent, LocalAudioTrack, Participant } from 'livekit-client'
-import { getToken, startTranscriptionAPI } from '../services/api'
+import { getToken } from '../services/api'
 import { createLiveKitRoom, connectRoom } from '../services/livekit'
 import type { Message } from '../types'
 
@@ -10,6 +10,8 @@ const isConnected = ref(false)
 const error = ref('')
 const messages = ref<Message[]>([])
 const participants = ref<Participant[]>([])
+const transcriptionActive = ref(false)
+
 
 export function useTranscription() {
   const connectToRoom = async (roomName: string, participantName: string) => {
@@ -40,17 +42,33 @@ export function useTranscription() {
       room.on(RoomEvent.DataReceived, (payload) => {
         try {
           const text = new TextDecoder().decode(payload)
+
+          if(!transcriptionActive.value){
+            transcriptionActive.value = true
+            messages.value.push({
+              text: "Transcription agent joined.",
+              timestamp: new Date().toLocaleTimeString(),
+              isUser: false
+            })
+          }
+
           messages.value.push({
             text: text,
             timestamp: new Date().toLocaleTimeString(),
             isUser: false
           })
+          
         } catch (e) {
           console.warn('Failed to decode message:', e)
         }
       })
 
-      await startTranscriptionAPI(roomName)
+      messages.value.push({
+        text: `Connected, waiting for transc agent to join.`,
+        timestamp: new Date().toLocaleTimeString(),
+        isUser: false
+      })
+
     } catch (err: any) {
       error.value = err.message || 'Failed to connect to room'
       console.error('Connection error:', err)
@@ -119,6 +137,7 @@ export function useTranscription() {
     error,
     messages,
     participants,
+    transcriptionActive,
     connectToRoom,
     startRecording,
     stopRecording,

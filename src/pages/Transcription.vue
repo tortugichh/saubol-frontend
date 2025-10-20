@@ -18,6 +18,7 @@ const {
   isConnected,
   isRecording,
   messages,
+  transcriptionActive,
   connectToRoom,
   startRecording,
   stopRecording,
@@ -44,7 +45,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col h-screen bg-gray-50">
-    <Header :room="room">
+    <Header :room="room" :transcription-active="transcriptionActive">
       <template #actions>
         <button
           @click="handleBack"
@@ -74,7 +75,7 @@ onMounted(() => {
         />
       </div>
       <p class="text-center text-sm text-gray-600 mt-2">
-        {{ !isConnected ? 'Connecting...' : isRecording ? 'Recording... Click to stop' : 'Click microphone to start recording' }}
+        {{ !isConnected ? 'Connecting...' : (transcriptionActive ? (isRecording ? 'Recording... Click to stop' : 'Agent joined — click microphone to start recording') : 'Waiting for transcription agent...') }}
       </p>
     </div>
   </div>
