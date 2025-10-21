@@ -11,8 +11,8 @@ defineProps<{
   <header class="bg-white border-b border-gray-200 px-6 py-4">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-xl font-semibold text-gray-900">Speech-to-Text</h1>
-        <p class="text-sm text-gray-600">Room: {{ room.name }} | User: {{ room.participantName }}</p>
+        <h1 class="text-xl font-semibold text-gray-900">Saubol</h1>
+        <p class="text-sm text-gray-600">Room: {{ room.name }} | Your username: {{ room.participantName }}</p>
       </div>
 
       <div class="flex items-center space-x-4">

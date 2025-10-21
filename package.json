@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
-    "livekit-client": "^2.15.10",
+    "livekit-client": "^2.15.11",
     "tailwindcss": "^4.1.14",
-    "vue": "^3.5.22"
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@types/node": "^24.6.0",

@@ -1,10 +1,9 @@
 import { ref } from 'vue'
-import { Room, RoomEvent, LocalAudioTrack, Participant } from 'livekit-client'
+import { RoomEvent, LocalAudioTrack, Participant } from 'livekit-client'
 import { getToken } from '../services/api'
-import { createLiveKitRoom, connectRoom } from '../services/livekit'
+import { useRoom } from './useRoom'
 import type { Message } from '../types'
 
-const roomRef = ref<Room | null>(null)
 const isRecording = ref(false)
 const isConnected = ref(false)
 const error = ref('')
@@ -12,20 +11,24 @@ const messages = ref<Message[]>([])
 const participants = ref<Participant[]>([])
 const transcriptionActive = ref(false)
 
-
 export function useTranscription() {
+  const { joinWithToken, room: sharedRoom, disconnect: sharedDisconnect } = useRoom()
+
   const connectToRoom = async (roomName: string, participantName: string) => {
     try {
       error.value = ''
-      
-      const tokenData = await getToken(roomName, participantName)
 
-      const room: Room = createLiveKitRoom()
-      await connectRoom(room, tokenData.url, tokenData.token)
-      
-      roomRef.value = room
+      const tokenData = await getToken(roomName, participantName)
+      // use shared joinWithToken so useRoom.room is set
+      await joinWithToken(tokenData.url, tokenData.token)
+
+      const room = sharedRoom.value
+      if (!room) {
+        throw new Error('Failed to obtain shared room after join')
+      }
+
       isConnected.value = true
-      
+
       participants.value = [
         room.localParticipant,
         ...Array.from(room.remoteParticipants.values())
@@ -39,44 +42,47 @@ export function useTranscription() {
         participants.value = participants.value.filter(p => p.sid !== participant.sid)
       })
 
-      room.on(RoomEvent.DataReceived, (payload) => {
+      room.on(RoomEvent.DataReceived, (payload: Uint8Array, participant?: Participant) => {
         try {
           const text = new TextDecoder().decode(payload)
 
-          if(!transcriptionActive.value){
+          if (!transcriptionActive.value) {
             transcriptionActive.value = true
             messages.value.push({
-              text: "Transcription agent joined.",
-              timestamp: new Date().toLocaleTimeString(),
-              isUser: false
+              id: Date.now().toString(),
+              type: 'transcription',
+              text: 'Transcription agent joined.',
+              timestamp: Date.now(),
             })
           }
 
           messages.value.push({
-            text: text,
-            timestamp: new Date().toLocaleTimeString(),
-            isUser: false
+            id: Date.now().toString(),
+            type: 'transcription',
+            text,
+            timestamp: Date.now(),
           })
-          
         } catch (e) {
           console.warn('Failed to decode message:', e)
         }
       })
 
       messages.value.push({
-        text: `Connected, waiting for transc agent to join.`,
-        timestamp: new Date().toLocaleTimeString(),
-        isUser: false
+        id: Date.now().toString(),
+        type: 'transcription',
+        text: 'Connected, waiting for transc agent to join.',
+        timestamp: Date.now(),
       })
-
     } catch (err: any) {
       error.value = err.message || 'Failed to connect to room'
       console.error('Connection error:', err)
+      throw err
     }
   }
 
   const startRecording = async () => {
-    if (!roomRef.value) return
+    const room = sharedRoom.value
+    if (!room) return
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -87,50 +93,50 @@ export function useTranscription() {
       })
 
       const audioTrack = stream.getAudioTracks()[0]
-      if (!audioTrack) {
-        throw new Error('No audio track available')
-      }
+      if (!audioTrack) throw new Error('No audio track available')
+
       const localAudioTrack = new LocalAudioTrack(audioTrack)
-      
-      await roomRef.value.localParticipant.publishTrack(localAudioTrack)
+      await room.localParticipant.publishTrack(localAudioTrack)
       isRecording.value = true
     } catch (err: any) {
       error.value = err.message || 'Failed to start recording'
       console.error('Recording error:', err)
+      throw err
     }
   }
 
   const stopRecording = async () => {
-    if (!roomRef.value) return
+    const room = sharedRoom.value
+    if (!room) return
 
     try {
-      // Stop all audio tracks
-      roomRef.value.localParticipant.audioTrackPublications.forEach((publication) => {
+      room.localParticipant.audioTrackPublications.forEach((publication) => {
         publication.track?.stop()
       })
 
       isRecording.value = false
       messages.value.push({
-        text: "Recording stopped.",
-        timestamp: new Date().toLocaleTimeString(),
-        isUser: true
+        id: Date.now().toString(),
+        type: 'transcription',
+        text: 'Recording stopped.',
+        timestamp: Date.now(),
       })
-
     } catch (err: any) {
       console.error('Stop recording error:', err)
+      throw err
     }
   }
 
   const disconnect = async () => {
-    if (roomRef.value) {
-        roomRef.value.removeAllListeners()
-        await roomRef.value.disconnect()
-        roomRef.value = null
-        isConnected.value = false
-        isRecording.value = false
-        messages.value.splice(0)
-    }
+    // delegate to shared disconnect so shared room is cleared
+    await sharedDisconnect()
+    isRecording.value = false
+    isConnected.value = false
+    messages.value.splice(0)
+    participants.value.splice(0)
+    transcriptionActive.value = false
   }
+
   return {
     isConnected,
     isRecording,

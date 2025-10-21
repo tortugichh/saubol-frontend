@@ -1,7 +1,9 @@
 export interface Message {
-  text: string
-  timestamp: string
-  isUser: boolean
+  id: string;
+  type: 'transcription' | 'chat';
+  text: string;
+  from?: string; // For chat messages
+  timestamp: number;
 }
 
 export interface RoomInfo {
