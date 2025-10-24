@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRoom } from '../composables/useRoom'
+import { getToken } from '../services/api'
 
 
 const router = useRouter()
@@ -19,7 +20,7 @@ const token = ref('')
 // Tab state
 const activeTab = ref<'demo' | 'custom'>('custom')
 
-const { isCreating, isJoining, isConnecting, error, createRoom, joinRoom, joinWithToken } = useRoom()
+const { isCreating, isJoining, isConnecting, error, joinRoom, joinWithToken } = useRoom()
 
 
 const emit = defineEmits<{
@@ -56,7 +57,10 @@ const createRoomHandler = async () => {
   const participantName = createParticipantName.value.trim()
 
   try {
-    await createRoom(roomName)
+    const tokenResp = await getToken(roomName, participantName)
+    const token = (tokenResp as any).token ?? (tokenResp as unknown as string)
+
+    await joinRoom(roomName, participantName, token)
     emit('roomCreated', roomName, participantName)
 
     newRoomName.value = ''
@@ -77,9 +81,12 @@ const joinRoomHandler = async () => {
   const participantName = joinParticipantName.value.trim()
 
   try {
-    await joinRoom(roomName, participantName)
-    emit('roomJoined', roomName, participantName)
+    const tokenResp = await getToken(roomName, participantName)
+    const token = (tokenResp as any).token ?? (tokenResp as unknown as string)
 
+    await joinRoom(roomName, participantName, token)
+    emit('roomJoined', roomName, participantName)
+    
     joinRoomName.value = ''
     joinParticipantName.value = ''
 

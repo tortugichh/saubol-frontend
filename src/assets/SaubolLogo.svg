@@ -1,0 +1,30 @@
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#009966"/>
+			<stop offset="1" stop-color="#009689"/>
+		</linearGradient>
+	</defs>
+
+	<!-- rounded background with gradient (shadow removed) -->
+	<g>
+	<rect x="6" y="6" width="60" height="60" rx="18" fill="url(#g)"/>
+	</g>
+
+	<!-- inner logo: taken from logo-saubol.svg, scaled and centered to fit tightly -->
+	<g transform="translate(13 13) scale(1.4375)" fill="none" stroke="white">
+		<path d="M2.66699 16H8.00033L10.0003 12L12.0003 20L14.0003 16H18.0003L20.0003 12L22.0003 20L24.0003 16H29.3337" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M7.99967 17.6666C8.92015 17.6666 9.66634 16.9204 9.66634 15.9999C9.66634 15.0794 8.92015 14.3333 7.99967 14.3333C7.0792 14.3333 6.33301 15.0794 6.33301 15.9999C6.33301 16.9204 7.0792 17.6666 7.99967 17.6666Z" fill="white" stroke="none"/>
+		<path d="M13.9997 17.6666C14.9201 17.6666 15.6663 16.9204 15.6663 15.9999C15.6663 15.0794 14.9201 14.3333 13.9997 14.3333C13.0792 14.3333 12.333 15.0794 12.333 15.9999C12.333 16.9204 13.0792 17.6666 13.9997 17.6666Z" fill="white" stroke="none"/>
+		<path d="M23.9997 17.6666C24.9201 17.6666 25.6663 16.9204 25.6663 15.9999C25.6663 15.0794 24.9201 14.3333 23.9997 14.3333C23.0792 14.3333 22.333 15.0794 22.333 15.9999C22.333 16.9204 23.0792 17.6666 23.9997 17.6666Z" fill="white" stroke="none"/>
+		<path opacity="0.8" d="M12 21C12.5523 21 13 20.5523 13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20C11 20.5523 11.4477 21 12 21Z" fill="white" stroke="none"/>
+		<path opacity="0.8" d="M22 21C22.5523 21 23 20.5523 23 20C23 19.4477 22.5523 19 22 19C21.4477 19 21 19.4477 21 20C21 20.5523 21.4477 21 22 21Z" fill="white" stroke="none"/>
+		<path opacity="0.8" d="M10 13C10.5523 13 11 12.5523 11 12C11 11.4477 10.5523 11 10 11C9.44772 11 9 11.4477 9 12C9 12.5523 9.44772 13 10 13Z" fill="white" stroke="none"/>
+		<path opacity="0.8" d="M20 13C20.5523 13 21 12.5523 21 12C21 11.4477 20.5523 11 20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13Z" fill="white" stroke="none"/>
+		<path opacity="0.4" d="M12 20L14 16" stroke="white" stroke-width="0.666667"/>
+		<path opacity="0.4" d="M22 20L24 16" stroke="white" stroke-width="0.666667"/>
+		<path opacity="0.4" d="M10 12L8 16" stroke="white" stroke-width="0.666667"/>
+		<path opacity="0.4" d="M20 12L24 16" stroke="white" stroke-width="0.666667"/>
+	</g>
+
+</svg>

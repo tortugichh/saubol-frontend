@@ -1,14 +1,5 @@
 const backendUrl = (import.meta.env.VITE_BACKEND_URL as string) || 'http://localhost:8000'
 
-export async function createRoom(roomName: string) {
-  const response = await fetch(`${backendUrl}/api/create-room?room_name=${encodeURIComponent(roomName)}`, {
-    method: 'POST'
-  })
-  if (!response.ok) {
-    throw new Error(`Failed to create room: ${response.status}`)
-  }
-  return response
-}
 
 export async function getToken(roomName: string, participantName: string) {
   const tokenResponse = await fetch(`${backendUrl}/api/token`, {
@@ -50,11 +41,15 @@ export async function stopTranscriptionAPI(roomName: string) {
   return response
 }
 
-export async function checkRoomExists(roomName: string) {
-  const response = await fetch(`${backendUrl}/api/check-room?room_name=${encodeURIComponent(roomName)}`)
+export async function getProtocol(roomName: string) {
+  const response = await fetch(`${backendUrl}/api/protocol?room_name=${encodeURIComponent(roomName)}`, {
+    method: 'GET'
+  })
   if (!response.ok) {
-    throw new Error(`Failed to check room: ${response.status}`)
+    throw new Error(`Failed to get protocol: ${response.status}`)
   }
-  return response.json() as Promise<{ exists: boolean }>
+  return response.json()
 }
+
+
 

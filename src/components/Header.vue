@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RoomInfo } from '../types'
+import Logo from '../assets/SaubolLogo.svg'
 
 defineProps<{
   room: RoomInfo
@@ -8,22 +9,22 @@ defineProps<{
 </script>
 
 <template>
-  <header class="bg-white border-b border-gray-200 px-6 py-4">
+  <header class="px-8 py-6">
     <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-xl font-semibold text-gray-900">Saubol</h1>
-        <p class="text-sm text-gray-600">Room: {{ room.name }} | Your username: {{ room.participantName }}</p>
-      </div>
-
-      <div class="flex items-center space-x-4">
-        <div v-if="transcriptionActive" class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm">
-          Agent: Joined
-        </div>
-        <div v-else class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
-          Waiting for agent
+      <div class="flex-1 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center justify-center">
+            <img :src="Logo" alt="Saubol" class="w-15 h-15" />
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold text-neutral-900">Saubol AI</h1>
+            <p class="text-sm text-[#717182]">AI-ассистент врача</p>
+          </div>
         </div>
 
-        <slot name="actions"></slot>
+        <div class="flex items-center space-x-3">
+          <slot name="actions"></slot>
+        </div>
       </div>
     </div>
   </header>

@@ -67,12 +67,7 @@ export function useTranscription() {
         }
       })
 
-      messages.value.push({
-        id: Date.now().toString(),
-        type: 'transcription',
-        text: 'Connected, waiting for transc agent to join.',
-        timestamp: Date.now(),
-      })
+      
     } catch (err: any) {
       error.value = err.message || 'Failed to connect to room'
       console.error('Connection error:', err)

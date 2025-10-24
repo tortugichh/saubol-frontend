@@ -1,7 +1,7 @@
 import { ref } from 'vue'
-import { createRoom as apiCreateRoom, checkRoomExists } from '../services/api'
 import { Room } from 'livekit-client'
 import { connectRoom } from '../services/livekit'
+import { livekitUrl } from '../services/livekit'
 
 // Shared state - moved outside function to be truly global
 const isCreating = ref(false)
@@ -12,35 +12,15 @@ const room = ref<Room | null>(null)
 
 export function useRoom() {
 
-  const createRoom = async (roomName: string) => {
-    if (!roomName.trim()) return
-
-    isCreating.value = true
-    error.value = ''
-
-    try {
-      await apiCreateRoom(roomName.trim())
-      return true
-    } catch (err: any) {
-      error.value = err.message || 'Failed to create room'
-      throw err
-    } finally {
-      isCreating.value = false
-    }
-  }
-
-  const joinRoom = async (roomName: string, participantName: string) => {
-    if (!roomName.trim() || !participantName.trim()) return
+  const joinRoom = async (roomName: string, participantName: string, token: string) => {
+    if (!roomName.trim() || !participantName.trim() || !token.trim()) return
 
     isJoining.value = true
     error.value = ''
 
     try {
-      const roomExists = await checkRoomExists(roomName.trim())
-      if (!roomExists.exists) {
-        throw new Error('Room does not exist')
-      }
-      return true
+      const newRoom = await joinWithToken(livekitUrl, token.trim())
+      return newRoom
     } catch (err: any) {
       error.value = err.message || 'Failed to join room'
       throw err
@@ -85,7 +65,6 @@ export function useRoom() {
     isConnecting,
     error,
     room,
-    createRoom,
     joinRoom,
     joinWithToken,
     disconnect

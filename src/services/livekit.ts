@@ -11,3 +11,5 @@ export async function connectRoom(room: Room, url: string, token: string) {
 export async function disconnectRoom(room: Room) {
   await room.disconnect()
 }
+
+export const livekitUrl = import.meta.env.VITE_LIVEKIT_URL 
