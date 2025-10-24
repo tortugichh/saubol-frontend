@@ -42,7 +42,7 @@ export function useTranscription() {
         participants.value = participants.value.filter(p => p.sid !== participant.sid)
       })
 
-      room.on(RoomEvent.DataReceived, (payload: Uint8Array, participant?: Participant) => {
+      room.on(RoomEvent.DataReceived, (payload: Uint8Array) => {
         try {
           const text = new TextDecoder().decode(payload)
 

@@ -102,17 +102,17 @@ const joinRoomHandler = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-      <h1 class="text-2xl font-bold text-center text-gray-900 mb-8">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div class="max-w-sm sm:max-w-md w-full bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+      <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-center text-gray-900 mb-6 sm:mb-8">
         Saubol | Speech-to-Text Rooms
       </h1>
       <!-- Tab Navigation -->
-      <div class="flex rounded-lg overflow-hidden mb-6 border border-gray-300">
+      <div class="flex rounded-lg overflow-hidden mb-4 sm:mb-6 border border-gray-300">
         <button
           @click="activeTab = 'demo'"
           :class="[
-            'flex-1 py-2 px-4 text-sm font-medium transition-colors',
+            'flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium transition-colors',
             activeTab === 'demo'
               ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -123,7 +123,7 @@ const joinRoomHandler = async () => {
         <button
           @click="activeTab = 'custom'"
           :class="[
-            'flex-1 py-2 px-4 text-sm font-medium transition-colors',
+            'flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium transition-colors',
             activeTab === 'custom'
               ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -134,29 +134,29 @@ const joinRoomHandler = async () => {
       </div>
 
       <!-- Demo Tab Content -->
-      <div v-if="activeTab === 'demo'" class="space-y-6">
+      <div v-if="activeTab === 'demo'" class="space-y-4 sm:space-y-6">
         <!-- Join Existing Room Section -->
-        <div class="mb-8">
-          <h2 class="text-lg font-semibold text-gray-700 mb-4">Join Existing Room</h2>
-          <div class="space-y-4">
+        <div class="mb-6 sm:mb-8">
+          <h2 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Join Existing Room</h2>
+          <div class="space-y-3 sm:space-y-4">
             <input
               v-model="joinRoomName"
               type="text"
               placeholder="Enter room name"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               @keyup.enter="joinRoomHandler"
             />
             <input
               v-model="joinParticipantName"
               type="text"
               placeholder="Enter your name"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               @keyup.enter="joinRoomHandler"
             />
             <button
               @click="joinRoomHandler"
               :disabled="!joinRoomName.trim() || !joinParticipantName.trim() || isJoining"
-              class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-green-600 text-white py-2 px-3 sm:px-4 text-sm rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ isJoining ? 'Joining...' : 'Join Room' }}
             </button>
@@ -164,27 +164,27 @@ const joinRoomHandler = async () => {
         </div>
 
         <!-- Create Room Section -->
-        <div class="mb-8">
-          <h2 class="text-lg font-semibold text-gray-700 mb-4">Create New Room</h2>
-          <div class="space-y-4">
+        <div class="mb-6 sm:mb-8">
+          <h2 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-700 mb-3 sm:mb-4">Create New Room</h2>
+          <div class="space-y-3 sm:space-y-4">
             <input
               v-model="newRoomName"
               type="text"
               placeholder="Enter room name"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               @keyup.enter="createRoomHandler"
             />
             <input
               v-model="createParticipantName"
               type="text"
               placeholder="Enter your name"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               @keyup.enter="createRoomHandler"
             />
             <button
               @click="createRoomHandler"
               :disabled="!newRoomName.trim() || !createParticipantName.trim() || isCreating"
-              class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-blue-600 text-white py-2 px-3 sm:px-4 text-sm rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ isCreating ? 'Creating...' : 'Create Room' }}
             </button>
@@ -193,42 +193,40 @@ const joinRoomHandler = async () => {
       </div>
 
       <!-- Custom Tab Content -->
-      <div v-else class="space-y-6">
-        <p class="text-gray-600 text-sm">
+      <div v-else class="space-y-4 sm:space-y-6">
+        <p class="text-gray-600 text-xs sm:text-sm">
           Connect LiveKit Meet with a custom server.
         </p>
 
-        <div class="space-y-4">
+        <div class="space-y-3 sm:space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
               LiveKit Server URL
             </label>
             <input
               v-model="url"
               type="text"
               placeholder="livekit url"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
               Token
             </label>
             <textarea
               v-model="token"
-              rows="4"
+              rows="3"
               placeholder="Paste the token generated by the LiveKit CLI"
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              class="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             ></textarea>
           </div>
-
-          
 
           <button
             @click="connectWithToken"
             :disabled="!url.trim() || !token.trim() || isConnecting"
-            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-blue-600 text-white py-2 px-3 sm:px-4 text-sm rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isConnecting ? 'Connecting...' : 'Connect' }}
           </button>
@@ -236,7 +234,7 @@ const joinRoomHandler = async () => {
       </div>
 
       <!-- Error Display -->
-      <div v-if="error" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+      <div v-if="error" class="mt-3 sm:mt-4 p-2 sm:p-3 bg-red-100 border border-red-400 text-red-700 rounded text-xs sm:text-sm">
         {{ error }}
       </div>
     </div>

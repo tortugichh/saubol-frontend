@@ -47,20 +47,18 @@ const formattedTime = computed(() => {
 </script>
 
 <template>
-  <div class="mb-3">
-    <div :class="['p-3 rounded-[14px] mb-2', bubbleClass]">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center justify-between  gap-3">
-          <!-- avatar placeholder (kept small spacing) -->
-          
-          <div :class="['text-[14px] font-medium', labelColor]">
+  <div class="mb-2 sm:mb-3">
+    <div :class="['p-2 sm:p-3 rounded-[14px] mb-1 sm:mb-2', bubbleClass]">
+      <div class="flex items-center justify-between mb-1 sm:mb-2">
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <div :class="['text-xs sm:text-sm font-medium truncate', labelColor]">
             {{ isDoctor ? 'Врач' : isPatient ? 'Пациент' : (props.message.from || '') }}:
           </div>
         </div>
-        <div class="text-[12px] text-[rgba(113,113,130,1)]">{{ formattedTime}}</div>
+        <div class="text-[10px] sm:text-xs text-[rgba(113,113,130,1)] flex-shrink-0 ml-2">{{ formattedTime}}</div>
       </div>
 
-      <div :class="['text-[14px] text-neutral-950']">{{ props.message.text }}</div>
+      <div class="text-xs sm:text-sm text-neutral-950 leading-relaxed break-words">{{ props.message.text }}</div>
     </div>
   </div>
 </template>

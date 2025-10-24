@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
+    "docx": "^9.5.1",
+    "jspdf": "^3.0.3",
     "livekit-client": "^2.15.11",
     "tailwindcss": "^4.1.14",
     "vue": "^3.5.22",
