@@ -321,6 +321,7 @@ const downloadProtocol = () => {
           }),
           
           // Patient info
+          
           new Paragraph({
             children: [
               new TextRun({ text: `ФИО пациента: ${patientName.value || 'Не указано'}`, bold: true }),
@@ -379,7 +380,7 @@ const downloadProtocol = () => {
           class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-md bg-blue-500 text-white shadow-sm hover:bg-blue-600 text-xs sm:text-sm"
         >
           <span class="hidden sm:inline">Participants</span>
-          <span class="sm:hidden">👥</span>
+          <span class="sm:hidden">List</span>
           <span>({{ participants.length }})</span>
         </button>
         <button
